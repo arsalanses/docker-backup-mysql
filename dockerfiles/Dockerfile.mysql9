@@ -1,0 +1,28 @@
+FROM alpine:3.21 as deps
+
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.33/supercronic-linux-amd64
+
+RUN apk add curl
+RUN curl -fsSLO "$SUPERCRONIC_URL"
+
+FROM python:3.13-slim
+
+LABEL org.opencontainers.image.source=https://github.com/arsalanses/backup-database
+LABEL org.opencontainers.image.description=docker-backup-database-mysql
+
+ENV SUPERCRONIC=supercronic-linux-amd64
+
+WORKDIR /app/
+
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --from=mysql:9 /usr/bin/mysqldump /usr/bin/mysqldump
+COPY --from=deps --chmod=0755 ${SUPERCRONIC} /app/supercronic
+
+COPY ./main.py /app/main.py
+COPY ./docker-entrypoint.sh /app/docker-entrypoint.sh
+
+RUN chmod +x /app/docker-entrypoint.sh
+
+CMD [ "/app/docker-entrypoint.sh" ]
