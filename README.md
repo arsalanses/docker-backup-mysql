@@ -26,6 +26,7 @@ services:
       - LOCAL_RETENTION_DAYS=7
 
       - UPLOAD_TO_S3=false
+      - MINIO_ENDPOINT=minio-api.example.com
       - S3_BUCKET=your-s3-bucket
       - AWS_ACCESS_KEY=your-aws-access-key
       - AWS_SECRET_KEY=your-aws-secret-key

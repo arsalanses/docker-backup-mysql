@@ -19,6 +19,7 @@ BACKUP_DIR = os.getenv('BACKUP_DIR', '/tmp')
 UPLOAD_TO_S3 = os.getenv('UPLOAD_TO_S3', 'false').lower() == 'true'
 S3_BUCKET = os.getenv('S3_BUCKET')
 S3_PREFIX = os.getenv('S3_PREFIX', 'backups')
+MINIO_ENDPOINT = os.getenv('MINIO_ENDPOINT')
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
@@ -58,6 +59,7 @@ def upload_to_s3(file_path):
 
     s3_client = boto3.client(
         's3',
+        endpoint=MINIO_ENDPOINT,
         aws_access_key_id=AWS_ACCESS_KEY,
         aws_secret_access_key=AWS_SECRET_KEY
     )
