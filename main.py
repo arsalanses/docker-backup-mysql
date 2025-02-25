@@ -84,8 +84,8 @@ def call_webhook(success, backup_file, s3_key=None):
         return
 
     query_params = {
-        'success': success,
-        'error': not success
+        'success': 'true' if success else 'false',
+        'error': 'true' if not success else 'false'
     }
 
     headers = {
