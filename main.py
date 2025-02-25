@@ -59,7 +59,7 @@ def upload_to_s3(file_path):
 
     s3_client = boto3.client(
         's3',
-        endpoint=MINIO_ENDPOINT,
+        endpoint_url=MINIO_ENDPOINT,
         aws_access_key_id=AWS_ACCESS_KEY,
         aws_secret_access_key=AWS_SECRET_KEY
     )
