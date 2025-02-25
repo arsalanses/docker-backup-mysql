@@ -7,8 +7,8 @@ RUN curl -fsSLO "$SUPERCRONIC_URL"
 
 FROM python:3.13-slim
 
-LABEL org.opencontainers.image.source=https://github.com/arsalanses/backup-database
-LABEL org.opencontainers.image.description=docker-backup-database-mysql
+LABEL org.opencontainers.image.source=https://github.com/arsalanses/docker-backup-mysql
+LABEL org.opencontainers.image.description=docker-backup-mysql
 
 ENV SUPERCRONIC=supercronic-linux-amd64
 

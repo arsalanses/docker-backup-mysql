@@ -5,7 +5,7 @@
 #### docker compose 
 ```yml
 services:
-  db:
+  mysql:
     image: mysql:9
     restart: always
     environment:
@@ -14,14 +14,14 @@ services:
       MYSQL_PASSWORD: examplepass
       MYSQL_ROOT_PASSWORD: examplerootpass
 
-  backup-database:
-    image: ghcr.io/arsalanses/backup-database:${TAG:-latest}
+  docker-backup-mysql:
+    image: ghcr.io/arsalanses/docker-backup-mysql:${TAG:-latest}
     restart: unless-stopped
     environment:
-      - DB_HOST=db
+      - DB_HOST=mysql
       - DB_NAME=exampledb
-      - DB_USER=exampleuser
-      - DB_PASSWORD=examplepass
+      - DB_USER=root
+      - DB_PASSWORD=examplerootpass
       - BACKUP_DIR=/backups
       - LOCAL_RETENTION_DAYS=7
 
@@ -33,7 +33,7 @@ services:
       # - WEBHOOK_URL=https://your-webhook-url.com
 
       - "CRON_SCHEDULE=0 * * * *"
-    volume:
+    volumes:
       - ./backups:/backups
     logging:
       options:
