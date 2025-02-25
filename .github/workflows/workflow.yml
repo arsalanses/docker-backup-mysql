@@ -6,8 +6,8 @@ on:
       - master
 
 env:
-  IMAGE_NAME: arsalanses/backup-database
-  APP_PATH: backup-database
+  IMAGE_NAME: arsalanses/docker-backup-mysql
+  APP_PATH: docker-backup-mysql
 
 jobs:
   build:
