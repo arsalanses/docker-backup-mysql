@@ -19,10 +19,11 @@ BACKUP_DIR = os.getenv('BACKUP_DIR', '/tmp')
 UPLOAD_TO_S3 = os.getenv('UPLOAD_TO_S3', 'false').lower() == 'true'
 S3_BUCKET = os.getenv('S3_BUCKET')
 S3_PREFIX = os.getenv('S3_PREFIX', 'backups')
-MINIO_ENDPOINT = os.getenv('MINIO_ENDPOINT')
+AWS_ENDPOINT_URL = os.getenv('AWS_ENDPOINT_URL')
 AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+BEARER_TOKEN = os.getenv('BEARER_TOKEN')
 LOCAL_RETENTION_DAYS = int(os.getenv('LOCAL_RETENTION_DAYS', '7'))
 
 def backup_mysql():
@@ -59,7 +60,7 @@ def upload_to_s3(file_path):
 
     s3_client = boto3.client(
         's3',
-        endpoint_url=MINIO_ENDPOINT,
+        endpoint_url=AWS_ENDPOINT_URL,
         aws_access_key_id=AWS_ACCESS_KEY,
         aws_secret_access_key=AWS_SECRET_KEY
     )
@@ -82,14 +83,18 @@ def call_webhook(success, backup_file, s3_key=None):
         logger.warning("Webhook URL not provided, skipping webhook call")
         return
 
-    payload = {
+    query_params = {
         'success': success,
-        'backup_file': backup_file,
-        's3_key': s3_key
+        'error': not success
+    }
+
+    headers = {
+        'Authorization': f'Bearer {BEARER_TOKEN}',
+        'Content-Type': 'application/json'
     }
 
     try:
-        response = requests.post(WEBHOOK_URL, json=payload)
+        response = requests.post(WEBHOOK_URL, params=query_params, headers=headers)
         response.raise_for_status()
         logger.info("Webhook called successfully")
     except requests.exceptions.RequestException as e:
