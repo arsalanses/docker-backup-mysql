@@ -19,21 +19,23 @@ services:
     restart: unless-stopped
     environment:
       - DB_HOST=mysql
+      - DB_PORT=3306
       - DB_NAME=exampledb
       - DB_USER=root
       - DB_PASSWORD=examplerootpass
       - BACKUP_DIR=/backups
-      - LOCAL_RETENTION_DAYS=7
 
       - UPLOAD_TO_S3=false
       - AWS_ENDPOINT_URL=https://minio-api.example.com
       - S3_BUCKET=your-s3-bucket
+      - S3_PREFIX=db-backups
       - AWS_ACCESS_KEY=your-aws-access-key
       - AWS_SECRET_KEY=your-aws-secret-key
 
       # - WEBHOOK_URL=https://your-webhook-url.com/api/v1/endpoints/database_webhook/external
       - BEARER_TOKEN=database
 
+      - LOCAL_RETENTION_DAYS=7
       - "CRON_SCHEDULE=0 * * * *"
     volumes:
       - ./backups:/backups
